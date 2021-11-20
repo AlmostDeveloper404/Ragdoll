@@ -1,23 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
+using Vadim;
 using UnityEngine;
 
-public class Waypoints : MonoBehaviour
+public class Waypoints : Singleton<Waypoints>
 {
-    #region Singleton
-    public static Waypoints instance;
-    private void Awake()
-    {
-        if (instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        instance = this;
-    }
-    #endregion
+    
+    public event Action EventOnStopRunning;
+    public event Action EventOnStartRunning;
+
+
     public Waypoint[] points;
-    public PlayerMovement PlayerMovement;
 
     int nextWaypointIndex;
     private void Start()
@@ -29,17 +21,19 @@ public class Waypoints : MonoBehaviour
         }
     }
 
-    public bool IsLastWaypoint(int index)
+    public void OnReachedTarget()
     {
-        if (index==points.Length-1)
+        if (points[nextWaypointIndex] == points[points.Length-1])
         {
-            return true;
+            Debug.Log("Yep");
+            GameManager.Instance.Restart();
         }
-        return false;
+        EventOnStopRunning?.Invoke();
     }
     public void ChangeWaypoint(int _wayPointIndex)
     {
+        EventOnStartRunning?.Invoke();
         nextWaypointIndex = _wayPointIndex + 1;
-        PlayerMovement.ChangePosition(points[nextWaypointIndex].transform.position,nextWaypointIndex);
+        PlayerMovement.Instance.ChangePosition(points[nextWaypointIndex].transform.position);
     }
 }

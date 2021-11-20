@@ -1,20 +1,10 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Vadim;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
 
-    public static GameManager instance;
-
-    private void Awake()
-    {
-        if (instance!=null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        instance = this;
-    }
     public void Restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);

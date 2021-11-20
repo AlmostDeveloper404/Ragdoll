@@ -9,12 +9,8 @@ public class Waypoint : MonoBehaviour
     public List<Enemy> enemiesInWaypoint = new List<Enemy>();
     [SerializeField] int WaypointIndex;
 
-
-    Waypoints waypoints;
-
     private void Start()
     {
-        waypoints = Waypoints.instance;
         SetWaypointsForEnemies();
     }
 
@@ -31,7 +27,7 @@ public class Waypoint : MonoBehaviour
         enemiesInWaypoint.Remove(enemy);
         if (enemiesInWaypoint.Count==0)
         {
-            waypoints.ChangeWaypoint(WaypointIndex);
+            Waypoints.Instance.ChangeWaypoint(WaypointIndex);
         }
 
     }

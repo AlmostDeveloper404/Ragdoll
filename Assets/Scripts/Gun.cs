@@ -15,10 +15,10 @@ public class Gun : MonoBehaviour
 
     Camera _camera;
     [SerializeField] int MaxBulletsInScene = 40;
-    PlayerMovement playerMovement;
 
     public int GunIndex;
 
+    private bool isActive=false;
     int currentBulletInList = 0;
     float _timer;
 
@@ -31,8 +31,8 @@ public class Gun : MonoBehaviour
 
     private void Start()
     {
-        playerMovement = PlayerMovement.instance;
-
+        Waypoints.Instance.EventOnStartRunning += Deactivate;
+        Waypoints.Instance.EventOnStopRunning += Activate;
         for (int i = 0; i < MaxBulletsInScene; i++)
         {
             GameObject bullet = Instantiate(BulletPref);
@@ -48,11 +48,20 @@ public class Gun : MonoBehaviour
     private void Update()
     {
         _timer -= Time.deltaTime;
-        if (Input.GetMouseButton(0) && _timer < 0 && playerMovement.CanShoot())
+        if (Input.GetMouseButton(0) && _timer < 0 && isActive)
         {
             TryShoot();
             _timer = FireRate;
         }
+    }
+
+    public void Activate()
+    {
+        isActive = true;
+    }
+    public void Deactivate()
+    {
+        isActive = false;
     }
   
     void TryShoot()
